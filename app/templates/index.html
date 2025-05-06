@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toxicity Analysis</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container for the form */
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: left;  /* Change this to left align text */
+        }
+
+        h1 {
+            color: #5a5a5a;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center; /* Keep heading centered */
+        }
+
+        /* Form styling */
+        label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            text-align: left; /* Align label to the left */
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Result styling */
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        /* Error message styling */
+        .error {
+            color: #d9534f;
+            font-size: 16px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+    <script>
+        function analyzeToxicity() {
+            const userId = document.getElementById("userId").value;
+            const commentText = document.getElementById("commentText").value;
+            const modelType = document.getElementById("model").value;
+
+            const requestData = {
+                id: userId,
+                comment_text: commentText,
+                model: modelType
+            };
+
+            // Making POST request to Flask API
+            fetch("http://localhost:5000/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Check if the response is an array with the Prediction value
+                if (Array.isArray(data) && data.length > 0) {
+                    const toxicityScore = data[0].Prediction;  // Access the Prediction value
+                    document.getElementById("result").innerHTML = `Toxicity Score: ${toxicityScore}`;
+                } else {
+                    console.error("Error: Expected an array with prediction but received:", data);
+                    document.getElementById("errorMessage").innerHTML = "An error occurred while processing your request.";
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("errorMessage").innerHTML = "An error occurred while processing your request.";
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Toxicity Analysis</h1>
+
+        <!-- Form Fields -->
+        <label for="userId">ID:</label>
+        <input type="text" id="userId" required><br>
+
+        <label for="commentText">Comment:</label>
+        <textarea id="commentText" rows="4" required></textarea><br>
+
+        <label for="model">Select Model:</label>
+        <select id="model">
+            <option value="Tree">Decision Tree</option>
+            <option value="SGD">SGD Regression</option>
+            <option value="LSTM">LSTM</option>
+        </select><br>
+
+        <button onclick="analyzeToxicity()">Analyze Toxicity</button><br>
+
+        <!-- Results -->
+        <div id="result"></div>
+        <div class="error" id="errorMessage"></div>
+    </div>
+</body>
+</html>

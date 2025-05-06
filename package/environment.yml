@@ -1,0 +1,17 @@
+name: toxicity-detection
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pandas=2.2.3
+  - scikit-learn=1.6.0
+  - pytorch=2.5.1
+  - tensorflow=2.18.0
+  - keras=3.7.0
+  - protobuf=5.29.1
+  - pip
+  - pip:
+    - black==24.10.0
+    - ruff==0.8.3
+    - pylint==3.3.2
+    - pytest==7.0

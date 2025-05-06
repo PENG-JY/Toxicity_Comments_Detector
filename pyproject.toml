@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "toxicity-detection"
+version = "0.1.0"
+description = "A Python package for detecting toxicity in online comments and handling related data processing tasks"
+authors = ["Xun Lei, Chenxi Guo, Jiayi Peng, Yiran Tao"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "package" }]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pandas = "^2.2.3"
+scikit-learn = "^1.6.0"
+torch = "^2.5.1"
+keras = "^3.7.0"
+tensorflow = "^2.18.0"
+argparse = "^1.4.0"
+protobuf = "^5.29.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0"                     
+black = "^24.10.0"                 
+ruff = "^0.8.3" 
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+pylint = "^3.3.2"
+ruff = "^0.8.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+toxicity_main = "package.toxic.bin.main:main"
