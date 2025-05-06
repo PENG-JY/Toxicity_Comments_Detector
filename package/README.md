@@ -1,5 +1,3 @@
-# 5400Final
-
 # **Toxicity Detection Package**
 
 A Python package for detecting toxicity in online comments. This package supports multiple models, including Decision Tree, SGD Regression, and LSTM-based models.
